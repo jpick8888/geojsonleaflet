@@ -41,13 +41,6 @@
 		attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
 	}).addTo(map);
 
-	fetch('map.geojson')
-		.then(response => response.json())
-		.then(data => {
-			L.geoJSON(data).addTo(map);
-		})
-		.catch(error => console.error('Error:', error));
-
 	const marker = L.marker([51.5, -0.09]).addTo(map)
 		.bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup();
 
@@ -79,6 +72,13 @@
 
 	map.on('click', onMapClick);
 
+	fetch('map.geojson')
+		.then(response => response.json())
+		.then(data => {
+			L.geoJSON(data).addTo(map);
+		})
+		.catch(error => console.error('Error:', error));
+		
 </script>
 
 
