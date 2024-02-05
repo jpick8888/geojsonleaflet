@@ -34,7 +34,7 @@
 <div id="map" style="width: 600px; height: 400px;"></div>
 <script>
 
-	const map = L.map('map').setView([51.505, -0.09], 13);
+	const map = L.map('map').setView([0, 0], 1);
 
 	const tiles = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 		maxZoom: 19,
@@ -42,7 +42,7 @@
 	}).addTo(map);
 
 	const marker = L.marker([51.5, -0.09]).addTo(map)
-		.bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup();
+		// .bindPopup('<b>Hello world!</b><br />I am a popup.').openPopup();
 
 	const circle = L.circle([51.508, -0.11], {
 		color: 'red',
@@ -61,13 +61,13 @@
 	const popup = L.popup()
 		.setLatLng([51.513, -0.09])
 		.setContent('I am a standalone popup.')
-		.openOn(map);
+		// .openOn(map);
 
 	function onMapClick(e) {
 		popup
 			.setLatLng(e.latlng)
 			.setContent(`You clicked the map at ${e.latlng.toString()}`)
-			.openOn(map);
+			// .openOn(map);
 	}
 
 	map.on('click', onMapClick);
@@ -75,9 +75,16 @@
 	fetch('MegaCities.geojson')
 		.then(response => response.json())
 		.then(data => {
-			L.geoJSON(data).addTo(map);
+			L.geoJSON(data, {
+				onEachFeature: function (feature, layer) {
+					if (feature.properties) {
+						layer.bindPopup("City: " + feature.properties.City +
+										"<br>Place: " + feature.properties.Place +
+										"<br>Population in 1985: " + feature.properties.Pop_1985);
+					}
+				}
+			}).addTo(map);
 		})
-		.catch(error => console.error('Error:', error));
 
 </script>
 
